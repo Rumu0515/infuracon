@@ -1,0 +1,34 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model posts {
+  id         Int      @id @default(autoincrement())
+  author     String   @db.VarChar(32)
+  image_url  String?  @db.VarChar(512)
+  lat        Float
+  lng        Float
+  context    String   @db.Text
+  publish_at DateTime @db.DateTime(0)
+  favorite   Int?
+}
+
+model comments {
+  id         Int      @id @default(autoincrement())
+  post_id    Int
+  author     String   @db.VarChar(32)
+  context    String   @db.Text
+  publish_at DateTime @db.DateTime(0)
+}
+
+model users {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(32)
+  point Int    @default(0)
+}
