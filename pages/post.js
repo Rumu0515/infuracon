@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import uploadImgFile from "../../lib/uploadImgFile";
+import uploadImgFile from "../lib/uploadImgFile";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,6 +23,7 @@ export default function posting() {
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
   const [context, setContext] = useState("");
+  const [point, setPoint] = useState(-1);
 
   //緯度経度読み込み
   useEffect(() => {
@@ -38,6 +39,17 @@ export default function posting() {
       setUsername(value);
     }
   }, []);
+
+  useEffect(() => {
+    if (username === '') {
+      return;
+    }
+
+    axios.get(`/api/get_user/${username}`).then((res) => {
+      const json = res.data;
+      setPoint(json.info.point);
+    });
+  }, [username]);
 
   const getCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -95,17 +107,29 @@ export default function posting() {
       <Head>
         <title>みんはざ：投稿作成</title>
       </Head>
-      <div className="bg-lime-700 content-center p-4 text-white text-center fixed top-0 w-full">
-        <a className="text-white m-5">Safe City</a>
+      <div className="gap-10 bg-lime-700 content-center p-4 text-white text-center flex flex-row justify-center fixed top-0 w-full">
+        <a className="text-white m-5">Safe City</a> 
+
+        {username !== '' && (
+          <div className="">
+            <div>
+              {username}さん
+            </div>
+            <div>
+              {point !== -1 && `${point}ポイント`}
+            </div>
+          </div>
+        )}
+
       </div>
 
 
       <div className="flex flex-col items-center justify-center mt-14 mb-2 text-lime-700">
         <h1 className="text-lime-700 text-lg">投稿作成</h1>
         <div className="flex flex-col items-center justify-center p-5 border-2 w-96 border-lime-700 rounded-md">
-          <div class="name">
+          <div className="name">
             <a className="p-3">名前</a>
-            <textarea
+            <textarea readOnly
               className="mt-5 border-2 w-40 border-lime-700 resize-none rounded-md"
               value={username}
               onChange={changeusername}
@@ -116,24 +140,28 @@ export default function posting() {
             ></textarea>
           </div>
 
-          <div class="pic">
-            <input
-              hidden //ファイルを選択を非表示に
-              type="file"
-              accept="image/*"
-              onChange={handleChangeFile}
-            />
+          <div className="pic">
+            <label>
+              <div>
+                <div>
+                  ここをクリックして画像を選択
+                </div>
+                <input
+                  hidden //ファイルを選択を非表示に
+                  type="file"
+                  accept="image/*"
+                  onChange={handleChangeFile}
+                />
+              </div>
+            </label>
             <img
               className="h-80 w-80 border-2 border-lime-700 rounded-md"
               src={imageUrl}
               alt="選択した画像はここに表示されます"
             />
-            <div className="text-center text-white w-24 border-2 border-lime-700 bg-lime-700 rounded-md">
-              画像を選択
-            </div>
           </div>
 
-          <div class="coord">
+          <div className="coord">
             <a>座標を取得する</a>
             <div className="App">
               {!isFirstRef && !isAvailable && <ErrorText />}
@@ -195,15 +223,15 @@ export default function posting() {
 
       <footer className="bg-lime-700 content-center w-full p-4 text-white text-center fixed bottom-0">
         <Link href="/">
-        <button className="h-auto w-auto mx-5 text-white">ホーム</button>        
+          <button className="h-auto w-auto mx-5 text-white">ホーム</button>
         </Link>
         <Link href="/postview">
-        <button className="h-auto w-auto mx-5">投稿一覧</button>        
+          <button className="h-auto w-auto mx-5">投稿一覧</button>
         </Link>
         <Link href="/">
-        <button className="h-auto w-auto mx-5">マップ</button>        
+          <button className="h-auto w-auto mx-5">マップ</button>
         </Link>
-     </footer>
+      </footer>
 
 
     </div>
