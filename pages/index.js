@@ -5,6 +5,8 @@ import MapboxLanguage from "@mapbox/mapbox-gl-language";
 import axios from "axios";
 import Link from "next/link";
 
+
+
 export default function Map() {
   const [Map, setMap] = useState();
   const [pageIsMounted, setPageIsMounted] = useState(false);
@@ -183,32 +185,41 @@ export default function Map() {
             rel="stylesheet"
           />
         </Head>
+
+
+        <div className="bg-lime-700 content-center p-4 text-white text-center fixed top-0 w-full">
+          <a className="text-white m-5">Safe City</a>
+        </div>
+
+        
         {/* <main className={styles.main}> */}
         <main className="flex flex-col w-screen items-center">
-          <div className="m-10 flex flex-row items-center">
-            <Link href="/post">
-              <button className="mr-5 border-2 w-36 font-bold text-2xl border-gray-700 rounded-xl">
-                投稿する
-              </button>
-            </Link>
-            <Link href="/postview">
-              <button className="ml-5 border-2 w-36 font-bold text-2xl border-gray-700 rounded-xl">
-                投稿一覧
-              </button>
-            </Link>
-            {isLogined && (
-              <button onClick={logout}>
-                ログアウト
-              </button>
-            )}
-          </div>
-
           <div
             id="map"
-            className="mt-10 bg-sky-300 w-full h-[calc(100vh-15rem)] fixed left-0 bottom-5 border-2 border-gray-700 rounded-xl"
+            className="mt-10 bg-sky-300 w-screen h-screen left-0 bottom-5 border-2 border-gray-700 rounded-xl"
           />
         </main>
         <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
+
+        <footer className="bg-lime-700 content-center w-full p-4 text-white text-center fixed bottom-0">
+          <Link href="/post">
+            <button className="h-auto w-auto mx-5 text-white">
+              投稿する
+            </button>
+          </Link>
+          <Link href="/postview">
+            <button className="h-auto w-auto mx-5 text-white">
+              投稿一覧
+            </button>
+          </Link>
+          <button className="h-auto w-auto mx-5">マップ</button>
+
+          {isLogined && (
+            <button onClick={logout}>
+              ログアウト
+            </button>
+          )}
+        </footer>
       </div>
     </>
   );

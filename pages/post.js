@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import uploadImgFile from "../lib/uploadImgFile";
+import uploadImgFile from "../../lib/uploadImgFile";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -31,7 +31,7 @@ export default function posting() {
       setAvailable(true);
     }
   }, [isAvailable]);
-  
+
   useEffect(() => {
     const value = localStorage.getItem("name")
     if (value !== null) {
@@ -91,151 +91,121 @@ export default function posting() {
   };
 
   return (
-    <div>
+    <div className="">
       <Head>
         <title>みんはざ：投稿作成</title>
       </Head>
+      <div className="bg-lime-700 content-center p-4 text-white text-center fixed top-0 w-full">
+        <a className="text-white m-5">Safe City</a>
+      </div>
 
-      <main>
-        <div className="flex flex-row">
-          {/* <h1 className="">{username} さん</h1> */}
-          <Link href="/">
-            <button className="mt-5 border-2 w-96 font-bold text-2xl border-gray-700 rounded-xl">
-              ホームに戻る
-            </button>
-          </Link>
-          {/* <Link href="/">
-            <button className="mt-5 border-2 w-96 font-bold text-2xl border-gray-700 rounded-xl">
-              {username} さん　
-            </button>
-          </Link> */}
-          <Link href="../postview">
-            <button className="mt-5 border-2 w-96 font-bold text-2xl border-gray-700 rounded-xl">
-              投稿を見る
-            </button>
-          </Link>
-        </div>
-        {/* 投稿アイコン */}
-        <div className="mt-10 flex flex-row justify-center">
-          <div>
-            {/* pngをアイコンにする */}
-            <Image src="/image/post.png" width={43} height={43} />
+
+      <div className="flex flex-col items-center justify-center mt-14 mb-2 text-lime-700">
+        <h1 className="text-lime-700 text-lg">投稿作成</h1>
+        <div className="flex flex-col items-center justify-center p-5 border-2 w-96 border-lime-700 rounded-md">
+          <div class="name">
+            <a className="p-3">名前</a>
+            <textarea
+              className="mt-5 border-2 w-40 border-lime-700 resize-none rounded-md"
+              value={username}
+              onChange={changeusername}
+              name="text"
+              rows="1"
+              cols="40"
+              maxLength="40"
+            ></textarea>
           </div>
-          <h1 className="text-4xl font-bold">投稿</h1>
-        </div>
-        <div className="m-10 font-bold text-2xl text-center  text-black flex flex-col justify-center items-center">
-          <label>
-            <div>
-              <div className="w-96 border-2 border-gray-700  rounded-lg">
-                ここをクリックして画像を選択
-              </div>
 
-              <input
-                hidden //ファイルを選択を非表示に
-                type="file"
-                accept="image/*"
-                onChange={handleChangeFile}
-              />
+          <div class="pic">
+            <input
+              hidden //ファイルを選択を非表示に
+              type="file"
+              accept="image/*"
+              onChange={handleChangeFile}
+            />
+            <img
+              className="h-80 w-80 border-2 border-lime-700 rounded-md"
+              src={imageUrl}
+              alt="選択した画像はここに表示されます"
+            />
+            <div className="text-center text-white w-24 border-2 border-lime-700 bg-lime-700 rounded-md">
+              画像を選択
             </div>
-          </label>
-
-          <img
-            className="mt-5"
-            src={imageUrl}
-            width={380}
-            height={380}
-            alt="選択した画像はここに表示されます"
-          />
-        </div>
-        <label
-          className="m-10 font-bold text-2xl text-center text-black flex flex-col justify-center items-center"
-          htmlFor="name"
-        >
-          <h3>名前を入力して下さい。</h3>
-          <textarea
-            className="mt-5 border-2
-            w-96
-            border-gray-700 
-            text-center
-            resize-none
-            rounded-lg"
-            value={username}
-            onChange={changeusername}
-            name="text"
-            rows="1"
-            cols="40"
-            maxLength="40"
-          ></textarea>
-        </label>
-        <label
-          className="m-10 font-bold text-2xl text-center text-black flex flex-col justify-center items-center"
-          htmlFor="location"
-        >
-          <h3>撮影した場所の座標を取得</h3>
-
-          <div className="App">
-            {!isFirstRef && !isAvailable && <ErrorText />}
-            {isAvailable && (
-              <div>
-                <div>
-                  <button
-                    onClick={getCurrentPosition}
-                    className="mt-5 border-2 w-96 border-gray-700 rounded-lg"
-                  >
-                    取得
-                  </button>
-                </div>
-                <div className="flex flex-row mt-5  border-gray-700 rounded-xl">
-                  <input
-                    className="border-2 w-48 border-neutral-500 rounded-lg text-center"
-                    readOnly
-                    type="number"
-                    style={{ resize: "none" }}
-                    rows="1"
-                    cols="9"
-                    value={lat}
-                    onChange={changeLat}
-                  />
-
-                  <input
-                    className="border-2 w-48 border-neutral-500 rounded-lg text-center"
-                    type="number"
-                    readOnly
-                    style={{ resize: "none" }}
-                    rows="1"
-                    cols="9"
-                    value={lng}
-                    onChange={changeLng}
-                  />
-                </div>
-              </div>
-            )}
           </div>
-        </label>
-        <div className="m-10 font-bold text-2xl text-center  border-gray-700 text-black flex flex-col justify-center items-center">
-          <label htmlFor="first">
-            <h3>投稿文を入力して下さい。</h3>
-          </label>
-          <textarea
-            className="mt-5 border-2 w-96 border-neutral-500 rounded-lg resize-none"
-            value={context}
-            onChange={changeContext}
-            name="context"
-            style={{ resize: "none" }}
-            rows="4"
-            cols="40"
-            maxLength="200"
-          ></textarea>
+
+          <div class="coord">
+            <a>座標を取得する</a>
+            <div className="App">
+              {!isFirstRef && !isAvailable && <ErrorText />}
+              {isAvailable && (
+                <div>
+                  <div className="border-2 w-80 border-lime-700 rounded-md">
+                    <input
+                      className="w-14 text-center"
+                      readOnly
+                      type="number"
+                      style={{ resize: "none" }}
+                      rows="1"
+                      cols="9"
+                      value={lat}
+                      onChange={changeLat}
+                    />
+
+                    <input
+                      className="w-14 text-center"
+                      type="number"
+                      readOnly
+                      style={{ resize: "none" }}
+                      rows="1"
+                      cols="9"
+                      value={lng}
+                      onChange={changeLng}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            <button onClick={getCurrentPosition} className="text-white border-2 w-20 bg-lime-700 rounded-md">
+              取得
+            </button>
+          </div>
+
+          <div className="border-lime-700">
+            <a>投稿文を入力して下さい。</a>
+            <textarea
+              className="border-2 w-80 border-lime-700 rounded-md resize-none"
+              value={context}
+              onChange={changeContext}
+              name="context"
+              style={{ resize: "none" }}
+              rows="4"
+              cols="40"
+              maxLength="200"
+            ></textarea>
+          </div>
         </div>
-        <label className=" flex flex-col justify-center items-center ">
-          <button
-            onClick={postPosts}
-            className="mt-5 mb-10 border-2 w-96 font-bold text-2xl border-gray-700 rounded-lg"
-          >
-            投稿
-          </button>
-        </label>
-      </main>
+      </div>
+      <button
+        onClick={postPosts}
+        className="border-2 w-96 font-bold text-white border-lime-700 bg-lime-700 rounded-md"
+      >
+        投稿
+      </button>
+
+
+      <footer className="bg-lime-700 content-center w-full p-4 text-white text-center fixed bottom-0">
+        <Link href="/">
+        <button className="h-auto w-auto mx-5 text-white">ホーム</button>        
+        </Link>
+        <Link href="/postview">
+        <button className="h-auto w-auto mx-5">投稿一覧</button>        
+        </Link>
+        <Link href="/">
+        <button className="h-auto w-auto mx-5">マップ</button>        
+        </Link>
+     </footer>
+
+
     </div>
   );
 }
